@@ -1,0 +1,35 @@
+inp = ['/Users/dvhodov/FASTA/seq-1.txt',
+       '/Users/dvhodov/FASTA/seq-2.txt',
+       '/Users/dvhodov/FASTA/seq-3.txt']
+
+def counter(s, name):
+    for i in range(0, len(s), 3):
+        if len(s[i:(i + 4)]) == 4:
+            if s[i:(i + 3)] == 'TGA' and s[i + 4] != '>':
+                print(name)
+            if s[i:(i + 3)] == 'TAA' and s[i + 4] != '>':
+                print(name)
+            if s[i:(i + 3)] == 'TAG' and s[i + 4] != '>':
+                print(name)
+
+def program(inp):
+    with open(inp, mode = 'r') as file:
+        s = ''
+        tga = tag = taa = 0
+        a = 0
+        for line in file:
+            if '>' in line:
+                if a != 0:
+                    name = line.split()[0][1:]
+                    counter(s, name)
+                else:
+                    name = line.split()[0][1:]
+            if '>' not in line:
+                s += line.strip()
+                a = 1
+        counter(s, name)
+
+for i in inp:
+    print(i)
+    program(i)
+    print()

@@ -1,0 +1,48 @@
+inp = ['/Users/dvhodov/FASTA/seq-1.txt',
+       '/Users/dvhodov/FASTA/seq-2.txt',
+       '/Users/dvhodov/FASTA/seq-3.txt']
+
+def program(inp):
+    middle = ["A", "C", "G", "T"]
+    lst = []
+    final = []
+    i = 1
+    d = dict()
+
+    while i < 3:
+        for elem in middle:
+            lst.append(elem + "A")
+            lst.append(elem + "C")
+            lst.append(elem + "G")
+            lst.append(elem + "T")
+        i += 1
+        middle.extend(lst)
+    for i in middle:
+        if len(i) == 3:
+            final.append(i)
+    final.sort()
+
+    for i in final:
+        d[i] = 0
+
+    with open(inp, mode = 'r') as file:
+        s = ''
+        for line in file:
+            if '>' in line:
+                line = line.strip()[0][0]
+                s += line
+            if '>' not in line:
+                s += line.strip()
+
+    for i in range(len(s)):
+        if s[i] == '>':
+            d[s[(i + 1):(i + 4)]] += 1
+
+    for value, key in d.items():
+        if key != 0:
+            print(value + ': ' + str(key))
+
+for i in inp:
+    print(i)
+    program(i)
+    print('\n')
