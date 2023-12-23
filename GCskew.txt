@@ -1,0 +1,50 @@
+#-m pip install matplotlib
+import matplotlib.pyplot as plt
+
+with open('/Users/dvhodov/Downloads/Ecoli', mode = "r") as file:
+    window = 100_000
+    step = 1000
+    s = ''
+    p = 0
+    d = dict()
+    d1 = dict()
+
+    for line in file:
+        if '>' not in line:
+            s += line.strip()
+
+    for i in range(0, len(s), step):
+        if len(l) - i >= window:
+            gg = s[i:i + window].count('G')
+            cc = s[i:i + window].count('C')
+            if gg + cc == 0:
+                d[i] = 0
+            else:
+                d[i] = (gg - cc) / (gg + cc)
+
+    for key, value in d.items():
+        p += value
+        d1[key] = p
+
+    max = max(d1.values())
+    min = min(d1.values())
+    for i in d1.keys():
+        if d1[i] == max:
+            maximum = i
+        if d1[i] == min:
+            minimum = i
+
+    plt.figure(figsize=(17, 11))
+    plt.rc('font', size=16)
+    ax1 = plt.subplot()
+    l1, = ax1.plot(list(d.keys()), list(d.values()), color='y')
+    ax2 = ax1.twinx()
+    l2, = ax2.plot(list(d1.keys()), list(d1.values()), color='g')
+    ax2.legend([l1, l2], ['GCSkew', 'Cumulative GCSkew'])
+    ax1.set_xlabel('Position in sequence in millions of base pairs', fontweight = 'bold')
+    ax1.set_ylabel('GCSkew', fontweight = 'bold')
+    ax2.set_ylabel('Cumulative GCSkew', fontweight = 'bold')
+    ax1.text(0, -0.04, f"maximum {maximum}\nminimum {minimum}")
+    plt.title(f'GCSkew plot for sequence of Escherichia coli (str. K-12 substr. MG1655)\nWith step size {step} and window size {window}\n',
+              fontsize = 25, fontweight = 'bold')
+    plt.savefig('figure.png')

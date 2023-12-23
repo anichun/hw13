@@ -1,0 +1,66 @@
+genbank = '/Users/dvhodov/FASTA/Mycoplasma.gb'
+fasta = '/Users/dvhodov/FASTA/Mycoplasma'
+s = []
+seq = ''
+lst = []
+
+def prog1(a):
+    a = a.replace('<', '')
+    a = a.replace('>', '')
+    a = a.strip().split()[1]
+    if 'complement' in a and 'join' in a:
+        a = a.split('(')[2][:-2]
+        a = a.split('..')
+        return(int(a[-1]), int(a[-1]) + 20, -1)
+    elif 'complement' in a:
+        a = a.split('(')[1][:-1]
+        a = a.split('..')
+        return(int(a[1]), int(a[1]) + 20, -1)
+    elif 'join' in a:
+        a = a.split('(')[1][:-1]
+        a = a.split('..')
+        return(int(a[0]) - 19, int(a[0]) - 1 , 1)
+    else:
+        a = a.split('..')
+        return(int(a[0]) - 19, int(a[0]) - 1 , 1)
+
+def prog2(seq):
+  smth = {'A': 'T',
+          'T': 'A',
+          'G': 'C',
+          'C': 'G'}
+  new = ''
+  for i in seq[::-1]:
+    new += smth[i]
+  return new
+
+with open(genbank, 'r') as file1, open(fasta, 'r') as file2:
+    for line in file1:
+        if 'CDS' in line.split():
+            s.append(prog1(line))
+    file2.readline()
+    for line in file2:
+      seq += line.strip()
+
+for i in s:
+  if i[2] == -1:
+    lst.append(prog2(seq[i[0]:i[1]]))
+  else:
+    lst.append(seq[i[0]:i[1]])
+d = dict()
+
+for k in lst:
+    for i in range(len(k) - 5):
+        kmer = k[i:(i + 6)]
+        if kmer not in d:
+            d[kmer] = 1
+        else:
+            d[kmer] += 1
+
+sort = sorted(d.items(), key = lambda x: x[1], reverse = True)
+
+a = 0
+for n, c in sort:
+    if a < 10:
+        print(n, c)
+        a += 1

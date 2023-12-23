@@ -1,0 +1,29 @@
+inp = ['/Users/dvhodov/FASTA/seq-1.txt',
+       '/Users/dvhodov/FASTA/seq-2.txt',
+       '/Users/dvhodov/FASTA/seq-3.txt']
+
+lst = ['TTA', 'TTG', 'CTA', 'CTG', 'CTC', 'CTT']
+d = dict()
+
+for i in lst:
+    d[i] = 0
+
+def program(inp):
+    with open(inp, mode = 'r') as file:
+        s = ''
+        for line in file:
+            if '>' not in line:
+                line = line.strip()
+                s += line
+
+    for i in range(0, len(s), 3):
+        if s[i:(i + 3)] in lst:
+            d[(s[i:(i + 3)])] += 1
+
+    for key, value in d.items():
+        print(key + ' ' + str(value))
+
+for i in inp:
+    print(i)
+    program(i)
+    print('\n')

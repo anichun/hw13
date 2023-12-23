@@ -1,0 +1,26 @@
+inp = ['/Users/dvhodov/FASTA/seq-1.txt',
+       '/Users/dvhodov/FASTA/seq-2.txt',
+       '/Users/dvhodov/FASTA/seq-3.txt']
+
+def program(inp):
+    s = ''
+    tga = tag = taa = 0
+    with open(inp, mode = 'r') as file:
+        for line in file:
+            s += line.strip()
+        s += '>'
+
+    for i in range(len(s)):
+        if s[i:(i + 4)] == 'TGA>':
+            tga += 1
+        if s[i:(i + 4)] == 'TAA>':
+            taa += 1
+        if s[i:(i + 4)] == 'TAG>':
+            tag += 1
+
+    print('TGA ' + str(tga) + '\n' + 'TAA: ' + str(taa) + '\n' + 'TAG: ' + str(tag))
+
+for i in inp:
+    print(i)
+    program(i)
+    print('\n')
